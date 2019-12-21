@@ -1,0 +1,4 @@
+﻿  Source.cpp
+C:\Users\Longday\source\repos\laba_na_5\Source.cpp(68,16): warning C4018:  <: несоответствие типов со знаком и без знака
+C:\Users\Longday\source\repos\laba_na_5\Source.cpp(200,9): warning C4101:  seconds: неиспользованная локальная переменная
+  laba_na_5.vcxproj -> C:\Users\Longday\source\repos\laba_na_5\Debug\laba_na_5.exe
