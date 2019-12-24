@@ -1,3 +1,6 @@
+// Лабораторная работа на поиск подстроки в строке
+// Реализовать 3 алгоритма - Прямой поиск, Кнута-Морриса-Пратта, Бойера-Мура
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -5,7 +8,7 @@
 #include <Windows.h>
 #include <chrono>
 
-const int NotUsed = system("color 70");
+const int NotUsed = system("color 70"); // для изменения цвета консоли
 
 void SetColor(int text, int bg) //Функция смены цвета
 {
@@ -13,7 +16,7 @@ void SetColor(int text, int bg) //Функция смены цвета
 	SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
 }
 
-int chSearch(std::string& first, std::string& second)
+int chSearch(std::string& first, std::string& second) // Алгоритм прямого поиска
 {
 	int sdvig = 0;
 	int i = 0;
@@ -32,7 +35,7 @@ int chSearch(std::string& first, std::string& second)
 	return sdvig;
 }
 
-int kmpSearch(std::string& first, std::string& second)
+int kmpSearch(std::string& first, std::string& second) // Алгоритм Кнута-Морриса-Пратта
 {
 	int sdvig = 0;
 	int i = 0;
@@ -59,15 +62,15 @@ int kmpSearch(std::string& first, std::string& second)
 	return sdvig;
 }
 
-std::map<char, int> vec_prefix(std::string c)
+std::map<char, int> vec_prefix(std::string substr) // функция для создания таблицы смещений
 {
 	std::map<char, int> prefix;
 	std::vector<int> vec;
 	int i;
 	
-	for (i = 0; i < c.size(); i++)
+	for (i = 0; i < substr.size(); i++)
 	{
-		vec.push_back(c[i]);
+		vec.push_back(substr[i]);
 	}
 	int m = 0;
 	prefix[vec[vec.size() - 1]] = vec.size();
@@ -86,19 +89,18 @@ std::map<char, int> vec_prefix(std::string c)
 		else
 			m = 0;
 	}
-
 	return prefix;
 }
 
-int bmSearch(std::string& first, std::string& second)
+int bmSearch(std::string& first, std::string& second) // алгоритм Бойера-Мура
 {
 	int sdvig = second.size() - 1;
 	int i = second.size() - 1;
 	int parametr = 1;
 	std::map <char, int> prefix_tab;
-	prefix_tab = vec_prefix(second);
+	prefix_tab = vec_prefix(second); // создаем таблицу смещений 
 
-	if (second.size() == 1)
+	if (second.size() == 1) // если подстрока состоит из одного символа
 	{
 		while (parametr)
 		{
@@ -142,14 +144,14 @@ int bmSearch(std::string& first, std::string& second)
 	}
 }
 
-void print_lab()
+void print_lab() // вывод шапки
 {
 	std::cout << "----------------------------------------------" << std::endl;
 	std::cout << "Лабораторная работа - поиск подстроки в строке" << std::endl;
 	std::cout << "----------------------------------------------" << std::endl << std::endl;
 }
 
-void printSubstr_find(const std::string& str, const int& position, int substr_size)
+void printSubstr_find(const std::string& str, const int& position, const int& substr_size) // вывод найденной подстроки
 {
 	std::cout << "Найденая подстрока: ";
 	int i = 0;
@@ -168,16 +170,16 @@ void printSubstr_find(const std::string& str, const int& position, int substr_si
 	std::cout << std::endl << std::endl;
 }
 
-void fillstr(std::string& s, std::string& c)
+void fillstr(std::string& str, std::string& substr) // ввод строки и подстроки
 {
 	std::cout << "Введите строку латинскими буквами: ";
-	std::getline(std::cin, s);
+	std::getline(std::cin, str);
 
 	std::cout << "Введите подстроку латинскими буквами: ";
-	std::getline(std::cin, c);
+	std::getline(std::cin, substr);
 }
 
-void print_position(const int& position)
+void print_position(const int& position) // вывод позиции подстроки в строке
 {
 	if (position == -1)
 		std::cout << "Строка не найдена!" << std::endl;
@@ -185,13 +187,13 @@ void print_position(const int& position)
 		std::cout << "Подстрока находится на позиции " << position << std::endl;
 }
 
-void print_str(std::string str, std::string substr)
+void print_str(const std::string& str, const std::string& substr) // вывод строки и подстроки 
 {
 	std::cout << "Строка, в которой ищем подстроку: " << str << std::endl;
 	std::cout << "Искомая подстрока: " << substr << std::endl;
 }
 
-void choose_search(std::string& str, std::string& substr)
+void choose_search(std::string& str, std::string& substr) // выбор алгоритма
 {
 	system("cls");
 	std::string value; // переменная, которая хранит выбранное значение
@@ -211,7 +213,7 @@ void choose_search(std::string& str, std::string& substr)
 	{
 		switch (value[0]) // проверям, взяв первый символ переменной value
 		{
-		case '1': // ручное заполнение
+		case '1': // посимвольный поиск
 		{
 			std::cout << std::endl << "Посимвольный поиск подстроки в строке" << std::endl;
 			print_str(str, substr);
@@ -223,7 +225,7 @@ void choose_search(std::string& str, std::string& substr)
 			std::cout << "Затраченное время на поиск строки: " << time_span.count() << " секунд" << std::endl;
 			break;
 		}
-		case '2': // заполнение через текстовый файл
+		case '2': // КМП
 		{
 			std::cout << std::endl << "Алгоритм КМП" << std::endl;
 			print_str(str, substr);
@@ -235,7 +237,7 @@ void choose_search(std::string& str, std::string& substr)
 			std::cout << "Затраченное время на поиск строки: " << time_span_1.count() << " секунд" << std::endl;
 			break;
 		}
-		case '3': // заполнение через текстовый файл
+		case '3': // БМ
 		{
 			std::cout << std::endl << "Алгоритм БМ" << std::endl;
 			print_str(str, substr);
@@ -261,7 +263,7 @@ void choose_search(std::string& str, std::string& substr)
 		system("cls");
 		choose_search(str, substr);
 	}
-	if (position != -1)
+	if (position != -1) // если подстрока найдена и известна позиция, выводим строку с подсветкой подстроки
 		printSubstr_find(str, position, substr.size());
 }
 
@@ -269,11 +271,11 @@ void choose_search(std::string& str, std::string& substr)
 int main()
 {
 	setlocale(0, "");
-	std::string s, c;
+	std::string str, substr;
 
 	print_lab();
-	fillstr(s, c);
-	choose_search(s, c);
+	fillstr(str, substr);
+	choose_search(str, substr);
 
 	system("pause");
 	return 0;
